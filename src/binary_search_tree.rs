@@ -1,7 +1,58 @@
 use std::ptr;
 
-/// Binary Search Tree (BST) implementation. Most used when you need to quickly search
-/// through a set of ordered values
+/// Binary Tree most used when you need to quickly search through a set of
+/// ordered values.
+///
+/// Binary Search Trees (BST) are great for search in ordered sets because it
+/// has logarithmic time complexity (O(log n)) when it comes to search, insert and
+/// deletion.
+///
+/// This implementation utilizes unsafe rust in some places due to the
+/// complexity and runtime overhead of building a compile-time safe structure.
+///
+/// # Examples
+///
+/// ## Inserting an element
+/// ```
+/// use dsa_abc::binary_search_tree::BinarySearchTree;
+///
+/// // Creates the BST with an initial value of 10
+/// let mut tree = BinarySearchTree::new(10);
+/// // Adds a new value following BST's ordering rules
+/// tree.add(5);
+/// assert_eq!(tree.get(&5), Some(&5));
+/// ```
+///
+/// ## Deleting an element
+///
+/// ```
+/// use dsa_abc::binary_search_tree::BinarySearchTree;
+/// 
+/// let mut tree = BinarySearchTree::new(10);
+/// tree.add(5);
+/// assert_eq!(tree.get(&5), Some(&5));
+/// 
+/// // deletes the node that contains a value that is equal to 5
+/// tree.delete(&5);
+/// assert_eq!(tree.get(&5), None);
+/// ```
+///
+/// ## Traversal
+///
+/// ```
+/// use dsa_abc::binary_search_tree::BinarySearchTree;
+///
+/// let mut tree = BinarySearchTree::new(10);
+/// tree.add(5);
+/// tree.add(15);
+///
+/// let mut on_find = |&data| println!("{}", data);
+/// // Prints to console:
+/// // 5
+/// // 10
+/// // 15
+/// tree.in_order(&mut on_find);
+/// ```
 pub struct BinarySearchTree<T: PartialOrd> {
     root: *mut Node<T>,
 }
@@ -46,8 +97,8 @@ impl<T: PartialOrd + PartialEq + Clone> BinarySearchTree<T> {
         }
     }
 
-    /// Get node value from `data`. Primarily used to check if a given data is 
-    /// present in the BST 
+    /// Get node value from `data`. Primarily used to check if a given data is
+    /// present in the BST
     unsafe fn get_node<'a>(data: &T, node: *mut Node<T>) -> Option<&'a T> {
         if node.is_null() {
             None
@@ -64,7 +115,7 @@ impl<T: PartialOrd + PartialEq + Clone> BinarySearchTree<T> {
         }
     }
 
-    /// Finds a successor to a node, deletes it and returns its value for later 
+    /// Finds a successor to a node, deletes it and returns its value for later
     /// replacement in another node
     unsafe fn find_successor_and_delete<'a>(node: *mut Node<T>) -> Option<&'a T> {
         if (*node).right.is_null() {
@@ -88,22 +139,26 @@ impl<T: PartialOrd + PartialEq + Clone> BinarySearchTree<T> {
         }
     }
 
-    /// Get a node value for `data` if a node exists with this data. Primarily 
-    /// used to check if a given data is present in the BST. O(log n) time 
+    /// Get a node value for `data` if a node exists with this data. Primarily
+    /// used to check if a given data is present in the BST. O(log n) time
     /// complexity, O(1) space complexity
     pub fn get(&self, data: &T) -> Option<&T> {
         unsafe { Self::get_node(data, self.root) }
     }
 
     /// Helper function to delete node
-    unsafe fn delete_node_helper(parent: *mut Node<T>, node: *mut Node<T>) {
+    unsafe fn delete_node_helper(parent: *mut Node<T>, node: *mut Node<T>, right: bool) {
         if !(*node).left.is_null() && !(*node).right.is_null() {
             // We know successor will not be `None`, since we
             // checked the left and right values for null ptr
             let successor = Self::find_successor_and_delete(node).unwrap();
             (*node).data = successor.clone();
         } else if (*node).left.is_null() && (*node).right.is_null() {
-            (*parent).delete_right();
+            if right {
+                (*parent).delete_right();
+            } else {
+                (*parent).delete_left();
+            }
         } else {
             // Then right.right is not null
             if (*node).left.is_null() {
@@ -126,19 +181,19 @@ impl<T: PartialOrd + PartialEq + Clone> BinarySearchTree<T> {
                         return;
                     }
                     if *data == (*right).data {
-                        Self::delete_node_helper(node, right);
+                        Self::delete_node_helper(node, right, true);
                     } else {
                         Self::delete_node(data, right);
                     }
                 } else if *data < (*node).data {
                     let left = (*node).left;
-                    if (*node).left.is_null() {
+                    if left.is_null() {
                         return;
                     }
-                    if *data == (*(*node).left).data {
-                        Self::delete_node_helper(node, left);
+                    if *data == (*left).data {
+                        Self::delete_node_helper(node, left, false);
                     } else {
-                        Self::delete_node(data, (*node).left);
+                        Self::delete_node(data, left);
                     }
                 }
             }
@@ -305,10 +360,29 @@ mod tests {
     #[test]
     fn find_deleted_root() {
         let mut tree = BinarySearchTree::new(10);
-        assert_eq!(tree.get(&10), Some(&10));
 
-        tree.delete(&10);
-        assert_eq!(tree.get(&10), None);
+        tree.add(5);
+        assert_eq!(tree.get(&5), Some(&5));
+
+        tree.delete(&5);
+        assert_eq!(tree.get(&5), None);
+
+        tree.add(15);
+        tree.delete(&15);
+        assert_eq!(tree.get(&15), None);
+
+        tree.add(5);
+        tree.add(1);
+        tree.add(9);
+        tree.delete(&5);
+        assert_eq!(tree.get(&5), None);
+
+        let mut vals: Vec<i32> = vec![];
+        let mut on_find = |&data| vals.push(data);
+        tree.in_order(&mut on_find);
+        assert_eq!(vals.get(0), Some(&1));
+        assert_eq!(vals.get(1), Some(&9));
+        assert_eq!(vals.get(2), Some(&10));
     }
 
     #[test]
