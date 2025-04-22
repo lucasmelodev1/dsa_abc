@@ -10,9 +10,11 @@ use std::ptr;
 /// This implementation utilizes unsafe rust in some places due to the
 /// complexity and runtime overhead of building a compile-time safe structure.
 ///
-/// # Examples
-///
-/// ## Inserting an element
+/// ### Examples
+/// Here are some examples on how to use this structure
+/// 
+/// #### Inserting an element
+/// 
 /// ```
 /// use dsa_abc::binary_search_tree::BinarySearchTree;
 ///
@@ -23,7 +25,7 @@ use std::ptr;
 /// assert_eq!(tree.get(&5), Some(&5));
 /// ```
 ///
-/// ## Deleting an element
+/// #### Deleting an element
 ///
 /// ```
 /// use dsa_abc::binary_search_tree::BinarySearchTree;
@@ -37,7 +39,7 @@ use std::ptr;
 /// assert_eq!(tree.get(&5), None);
 /// ```
 ///
-/// ## Traversal
+/// #### Traversal
 ///
 /// ```
 /// use dsa_abc::binary_search_tree::BinarySearchTree;
@@ -53,6 +55,7 @@ use std::ptr;
 /// // 15
 /// tree.in_order(&mut on_find);
 /// ```
+/// 
 pub struct BinarySearchTree<T: PartialOrd> {
     root: *mut Node<T>,
 }

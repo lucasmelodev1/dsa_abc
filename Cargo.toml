@@ -1,6 +1,6 @@
 [package]
 name = "dsa_abc"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Lucas Rodrigues"]
 license = "MIT"
 keywords = ["data", "structures", "algorithms", "tree", "binary"]
