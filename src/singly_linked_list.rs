@@ -1,8 +1,58 @@
 use std::ptr;
 
-/// Linked list which nodes only point to their next element. Useful in cases
-/// where your data will grow indefinitely and your program can't handle
-/// Vec's memory copy in growth
+/// Linked list which nodes only point to their next element.
+/// 
+/// Useful in cases where your data will grow indefinitely and your program 
+/// can't handle Vec's memory copy in growth.
+/// 
+/// This implementation utilizes unsafe rust in some places due to the
+/// complexity and runtime overhead of building a compile-time safe structure.
+/// 
+/// ### Examples
+/// Here are some examples on how to use this structure
+/// 
+/// #### Inserting an element
+/// 
+/// ```
+/// use dsa_abc::singly_linked_list::SinglyLinkedList;
+/// 
+/// // Creates the list with a starting element 10
+/// let mut list = SinglyLinkedList::new(10);
+/// assert_eq!(list.get_first(), Some(&10));
+/// 
+/// // Insert element at the end of list
+/// list.push(20);
+/// assert_eq!(list.get_last(), Some(&20));
+/// 
+/// // Insert element at the start of list
+/// list.insert(1);
+/// assert_eq!(list.get_first(), Some(&1));
+/// ```
+/// 
+/// #### Deleting an element
+/// 
+/// ```
+/// use dsa_abc::singly_linked_list::SinglyLinkedList;
+/// 
+/// // Creates an empty list
+/// let mut list = SinglyLinkedList::new_empty();
+/// list.push(10);
+/// list.push(20);
+/// list.push(30);
+/// 
+/// // Removes the first element
+/// list.remove_first();
+/// assert_eq!(list.get_first(), Some(&20)); // It was 10 before
+/// 
+/// // Removes the last element
+/// list.pop();
+/// assert_eq!(list.get_last(), Some(&20)); // It was 30 before
+/// 
+/// // Removes the element at the given index if it exists
+/// list.remove_at(0);
+/// assert_eq!(list.size, 0);
+/// ```
+/// 
 pub struct SinglyLinkedList<T> {
     root: *mut Node<T>,
     leaf: *mut Node<T>,
