@@ -8,6 +8,10 @@ Currently includes a fully functional and tested Binary Search Tree (BST) with s
     - Delete
     - Search
     - In-order, Pre-order, Post-order traversals
+- ✅ Singly Linked List
+    - Insert
+    - Delete
+    - Get by index and data
 - 📈 Logarithmic time complexity for insert/search/delete in balanced trees
 - 🧪 Thoroughly tested with unit tests
 - 🦀 Unsafe Rust for raw pointer manipulation (performance reasons)
@@ -64,10 +68,11 @@ src/
 
 This crate aims to be an educational toolkit for practicing and learning DSA in Rust. Upcoming additions include:
 - ✅ Binary Search Tree
+- ✅ Singly Linked List
+- ⏳ Doubly Linked List
 - ⏳ AVL Tree
 - ⏳ Red-Black Tree
 - ⏳ Hash Table
-- ⏳ Linked List
 - ⏳ Sorting Algorithms (Merge, Quick, Bubble)
 - ⏳ Heap
 
