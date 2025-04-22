@@ -1,35 +1,27 @@
-#📚 Rust DSA Library
-
+# 📚 Rust DSA Library
 A collection of core Data Structures and Algorithms implemented in Rust.
 Currently includes a fully functional and tested Binary Search Tree (BST) with support for insert, delete, search, and traversal operations.
-##🚀 Features
 
-    ✅ Binary Search Tree (BST)
+## 🚀 Features
+- ✅ Binary Search Tree (BST)
+    - Insert
+    - Delete
+    - Search
+    - In-order, Pre-order, Post-order traversals
+- 📈 Logarithmic time complexity for insert/search/delete in balanced trees
+- 🧪 Thoroughly tested with unit tests
+- 🦀 Unsafe Rust for raw pointer manipulation (performance reasons)
 
-        Insert
-
-        Delete
-
-        Search
-
-        In-order, Pre-order, Post-order traversals
-
-    📈 Logarithmic time complexity for insert/search/delete in balanced trees
-
-    🧪 Thoroughly tested with unit tests
-
-    🦀 Unsafe Rust for raw pointer manipulation (educational use-case)
-
-##📦 Installation
-
+## 📦 Installation
 Clone this repository and include it in your workspace or build it as a Rust library:
 
 git clone https://github.com/lucasmelodev1/dsa_abc
 cd dsa_abc
 cargo build
 
-##📘 Usage Example
+## 📘 Usage Example
 
+```rust
 use dsa_abc::BinarySearchTree;
 
 fn main() {
@@ -46,48 +38,42 @@ fn main() {
     bst.in_order(&mut |v| values.push(*v));
     println!("In-order values: {:?}", values);
 }
+```
 
-##✅ Tests
+## ✅ Tests
 
 Run tests using:
-
+```bash
 cargo test
+```
 
 Tests include:
+- Basic insert/search/delete
+- Deleting root and internal nodes
+- Verifying correct order in traversals (in-order, pre-order, post-order)
 
-    Basic insert/search/delete
+## 📂 Structure
 
-    Deleting root and internal nodes
-
-    Verifying correct order in traversals (in-order, pre-order, post-order)
-
-##📂 Structure
-
+```file
 src/
-├── lib.rs        # Core BinarySearchTree implementation
+├── lib.rs        # Core implementation
 └── ...
+```
 
-##🔧 Planned Features
+## 🔧 Planned Features
 
 This crate aims to be an educational toolkit for practicing and learning DSA in Rust. Upcoming additions include:
+- ✅ Binary Search Tree
+- ⏳ AVL Tree
+- ⏳ Red-Black Tree
+- ⏳ Hash Table
+- ⏳ Linked List
+- ⏳ Sorting Algorithms (Merge, Quick, Bubble)
+- ⏳ Heap
 
-    ✅ Binary Search Tree
+## ⚠️ Safety Disclaimer
 
-    ⏳ AVL Tree
+This library uses unsafe code to manually manage pointers for educational purposes. Check the tests section to see if they are enough for your use case and, if not enough, please contact me and I will update them.
 
-    ⏳ Red-Black Tree
-
-    ⏳ Hash Table
-
-    ⏳ Linked List
-
-    ⏳ Sorting Algorithms (Merge, Quick, Bubble)
-
-    ⏳ Heap
-
-##⚠️ Safety Disclaimer
-
-This library uses unsafe code to manually manage pointers for educational purposes. While useful for learning low-level memory management, it should be handled with care in production systems.
-##📄 License
-
+## 📄 License
 MIT License
