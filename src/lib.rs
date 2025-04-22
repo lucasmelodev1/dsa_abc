@@ -1,16 +1,21 @@
 use std::ptr;
 
+/// Binary Search Tree (BST) implementation. Most used when you need to quickly search
+/// through a set of ordered values
 pub struct BinarySearchTree<T: PartialOrd> {
     root: *mut Node<T>,
 }
 
 impl<T: PartialOrd + Clone> BinarySearchTree<T> {
+    /// Create a new BST with an initial data as root
     pub fn new(data: T) -> BinarySearchTree<T> {
         BinarySearchTree {
             root: Node::new_mut(data),
         }
     }
 
+    /// Add a node recursively with data. If data already exists in tree, ignore.
+    /// Node must not be root
     unsafe fn add_node(data: T, node: *mut Node<T>) {
         unsafe {
             if data > (*node).data {
@@ -29,12 +34,20 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         }
     }
 
+    /// Add a node to the BST using `data`. If data already exists in tree,
+    /// ignore. O(log n) time complexity, O(1) space complexity
     pub fn add(&mut self, data: T) {
-        unsafe {
-            Self::add_node(data, self.root);
+        if self.root.is_null() {
+            self.root = Node::new_mut(data);
+        } else {
+            unsafe {
+                Self::add_node(data, self.root);
+            }
         }
     }
 
+    /// Get node value from `data`. Primarily used to check if a given data is 
+    /// present in the BST 
     unsafe fn get_node<'a>(data: &T, node: *mut Node<T>) -> Option<&'a T> {
         if node.is_null() {
             None
@@ -51,6 +64,8 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         }
     }
 
+    /// Finds a successor to a node, deletes it and returns its value for later 
+    /// replacement in another node
     unsafe fn find_successor_and_delete<'a>(node: *mut Node<T>) -> Option<&'a T> {
         if (*node).right.is_null() {
             return None;
@@ -73,10 +88,14 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         }
     }
 
+    /// Get a node value for `data` if a node exists with this data. Primarily 
+    /// used to check if a given data is present in the BST. O(log n) time 
+    /// complexity, O(1) space complexity
     pub fn get(&self, data: &T) -> Option<&T> {
         unsafe { Self::get_node(data, self.root) }
     }
 
+    /// Helper function to delete node
     unsafe fn delete_node_helper(parent: *mut Node<T>, node: *mut Node<T>) {
         if !(*node).left.is_null() && !(*node).right.is_null() {
             // We know successor will not be `None`, since we
@@ -95,6 +114,7 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         }
     }
 
+    /// Deletes a node. Does not worth if node is root
     unsafe fn delete_node(data: &T, node: *mut Node<T>) {
         if node.is_null() {
             return;
@@ -125,6 +145,7 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         }
     }
 
+    /// Deletes a node. O(log n) time complexity, O(1) space complexity
     pub fn delete(&mut self, data: &T) {
         unsafe {
             if (*self.root).data == *data {
@@ -138,7 +159,8 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
 
     unsafe fn post_order_node<'a, F>(on_find: &mut F, node: *mut Node<T>)
     where
-        F: FnMut(&'a T), T: 'a,
+        F: FnMut(&'a T),
+        T: 'a,
     {
         if node.is_null() {
             return;
@@ -151,7 +173,8 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
 
     unsafe fn pre_order_node<'a, F>(on_find: &mut F, node: *mut Node<T>)
     where
-        F: FnMut(&'a T), T: 'a,
+        F: FnMut(&'a T),
+        T: 'a,
     {
         if node.is_null() {
             return;
@@ -164,7 +187,8 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
 
     unsafe fn in_order_node<'a, F>(on_find: &mut F, node: *mut Node<T>)
     where
-        F: FnMut(&'a T), T: 'a,
+        F: FnMut(&'a T),
+        T: 'a,
     {
         if node.is_null() {
             return;
@@ -175,19 +199,34 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
         Self::in_order_node(on_find, (*node).right);
     }
 
-    pub fn in_order<'a, F>(&self, on_find: &mut F) where F: FnMut(&'a T), T: 'a {
+    /// In order traversal with `on_find` callback when each node is found
+    pub fn in_order<'a, F>(&self, on_find: &mut F)
+    where
+        F: FnMut(&'a T),
+        T: 'a,
+    {
         unsafe {
             Self::in_order_node(on_find, self.root);
         }
     }
 
-    pub fn pre_order<'a, F>(&self, on_find: &mut F) where F: FnMut(&'a T), T: 'a {
+    /// Pre order traversal with `on_find` callback when each node is found
+    pub fn pre_order<'a, F>(&self, on_find: &mut F)
+    where
+        F: FnMut(&'a T),
+        T: 'a,
+    {
         unsafe {
             Self::pre_order_node(on_find, self.root);
         }
     }
 
-    pub fn post_order<'a, F>(&self, on_find: &mut F) where F: FnMut(&'a T), T: 'a {
+    /// Post order traversal with `on_find` callback when each node is found
+    pub fn post_order<'a, F>(&self, on_find: &mut F)
+    where
+        F: FnMut(&'a T),
+        T: 'a,
+    {
         unsafe {
             Self::post_order_node(on_find, self.root);
         }
@@ -195,7 +234,7 @@ impl<T: PartialOrd + Clone> BinarySearchTree<T> {
 }
 
 pub struct Node<T: PartialOrd> {
-    pub data: T,
+    data: T,
     left: *mut Node<T>,
     right: *mut Node<T>,
 }

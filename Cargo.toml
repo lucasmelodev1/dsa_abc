@@ -1,6 +1,13 @@
 [package]
 name = "dsa_abc"
 version = "0.1.0"
+authors = ["Lucas Rodrigues"]
+license = "MIT"
+keywords = ["data", "structures", "algorithms", "tree", "binary"]
+publish = true
 edition = "2021"
+description = "Implementation of basic data structure and algorithms. Usability and performance is priority"
+repository = "https://github.com/lucasmelodev1/dsa_abc"
+homepage = "https://github.com/lucasmelodev1/dsa_abc"
 
 [dependencies]
